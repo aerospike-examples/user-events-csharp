@@ -1,0 +1,9 @@
+/Users/peter/git/aerospike/user-events-csharp/AerospikeTraining/obj/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/Users/peter/git/aerospike/user-events-csharp/AerospikeTraining/bin/Debug/AerospikeClient.dll
+/Users/peter/git/aerospike/user-events-csharp/AerospikeTraining/bin/Debug/Neo.Lua.dll
+/Users/peter/git/aerospike/user-events-csharp/AerospikeTraining/bin/Debug/Neo.Lua.Desktop.dll
+/Users/peter/git/aerospike/user-events-csharp/AerospikeTraining/bin/Debug/AerospikeTraining.exe.config
+/Users/peter/git/aerospike/user-events-csharp/AerospikeTraining/bin/Debug/AerospikeTraining.exe.mdb
+/Users/peter/git/aerospike/user-events-csharp/AerospikeTraining/bin/Debug/AerospikeTraining.exe
+/Users/peter/git/aerospike/user-events-csharp/AerospikeTraining/obj/Debug/AerospikeTraining.exe
+/Users/peter/git/aerospike/user-events-csharp/AerospikeTraining/obj/Debug/AerospikeTraining.exe.mdb
