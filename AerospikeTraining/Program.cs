@@ -232,7 +232,7 @@ namespace AerospikeTraining
 					client.Put (updatePolicy, EventKey, new Bin ("total-records", -1));
 
 					try {
-						// Now write the data, just as a single bucket. Thus, we can always do a replace.
+						// Now write the data. In this case we can always do a replace.
 						Key keyForSequence = new Key("test", "user-events", FormKeyString (user, DateString, sequenceNumber));
 						Record eventSequenceRecord = client.Get (null, keyForSequence, "events");
 						List<Object> eventSequenceList;
@@ -243,6 +243,8 @@ namespace AerospikeTraining
 							eventSequenceList = (List<Object>)eventSequenceRecord.GetValue ("events");
 						}
 						eventSequenceList.Add (EventString);
+						// Add the user, date and sequence number for clarity. This is not needed in production
+						// systems as the base record (sequence 1) contains all this information
 						Bin User = new Bin ("user-id", user);
 						Bin Day = new Bin ("day", DateString);
 						Bin Sequence = new Bin ("sequence", sequenceNumber);
@@ -349,13 +351,15 @@ namespace AerospikeTraining
 			// Note: If we want to get a list of all the records to iterate through rather than just the count,
 			// we get the maximum sequence from the count, iterate through the keys from 2->Max Sequence (as we
 			// already have record 1), form a list of keys then do a batch read. This code is provided for clarity
-			//
-			// We probably should be using locking to make sure we have no concurrency issues: see AddEvent method
-			// for example locking code.
 			String user = eventRecord.GetString("user-id");
 			String dateStr = eventRecord.GetString ("day");
 			List<Object> events = (List<Object>) eventRecord.GetValue ("events");
 			int count = eventRecord.GetInt ("total-records");
+			if (count < 0) {
+				// Another thread has this record locked. Either retry or throw an exception
+				throw new AerospikeException ("Record locked");
+			}
+
 			List<Key> keyList = new List<Key> ();
 			for (int i = 2; i <= GetSequenceNumberFromRecordNumber (count); i++) {
 				keyList.Add(new Key ("test", "user-events", FormKeyString(user, dateStr, i)));	
