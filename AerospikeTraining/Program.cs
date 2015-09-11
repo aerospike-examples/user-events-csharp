@@ -30,8 +30,20 @@ using Aerospike.Client;
 
 namespace AerospikeTraining
 {
+	public class KeyClass 
+	{
+		public String name;
+		public String user;
+		public int sequence;
+		public KeyClass(String n, String u, int s) {
+			name = n;
+			user = u;
+			sequence = s;
+		}
+	};
     class Program
     {
+
 		public const int MAX_RECORDS = 10000;
 		public const int MAX_DAYS = 60;
 		public const int BIG_EVENTS = 1000;
@@ -63,6 +75,9 @@ namespace AerospikeTraining
 			this.updatePolicy.recordExistsAction = RecordExistsAction.UPDATE_ONLY;
 			this.createPolicy = new WritePolicy ();
 			this.createPolicy.recordExistsAction = RecordExistsAction.CREATE_ONLY;
+			KeyClass k = new KeyClass("test", "aUser", 1234556);
+			Key keyy = new Key ("test", "user-name", Value.Get(k));
+			k = k;
 		}
         static void Main(string[] args)
         {
@@ -362,16 +377,15 @@ namespace AerospikeTraining
 
 			List<Key> keyList = new List<Key> ();
 			for (int i = 2; i <= GetSequenceNumberFromRecordNumber (count); i++) {
-				keyList.Add(new Key ("test", "user-events", FormKeyString(user, dateStr, i)));	
-				Key[] keys = keyList.ToArray ();
-				Record[] records = client.Get (null, keys);
-				foreach (Record record in records) {
-					if (record != null) {
-						List<Object> theseEvents = (List<Object>)record.GetValue ("events");
-						events.AddRange(theseEvents);
-					}
+				keyList.Add (new Key ("test", "user-events", FormKeyString (user, dateStr, i)));
+			}
+			Key[] keys = keyList.ToArray ();
+			Record[] records = client.Get (null, keys);
+			foreach (Record record in records) {
+				if (record != null) {
+					List<Object> theseEvents = (List<Object>)record.GetValue ("events");
+					events.AddRange(theseEvents);
 				}
-
 			}
 				
 			String result = eventRecord.GetString ("user-id") + ":" + eventRecord.GetString ("day") + ":" + eventRecord.GetInt ("sequence") + ":" + events.Count;
