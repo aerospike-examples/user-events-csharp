@@ -30,17 +30,6 @@ using Aerospike.Client;
 
 namespace AerospikeTraining
 {
-	public class KeyClass 
-	{
-		public String name;
-		public String user;
-		public int sequence;
-		public KeyClass(String n, String u, int s) {
-			name = n;
-			user = u;
-			sequence = s;
-		}
-	};
     class Program
     {
 
@@ -75,9 +64,6 @@ namespace AerospikeTraining
 			this.updatePolicy.recordExistsAction = RecordExistsAction.UPDATE_ONLY;
 			this.createPolicy = new WritePolicy ();
 			this.createPolicy.recordExistsAction = RecordExistsAction.CREATE_ONLY;
-			KeyClass k = new KeyClass("test", "aUser", 1234556);
-			Key keyy = new Key ("test", "user-name", Value.Get(k));
-			k = k;
 		}
         static void Main(string[] args)
         {
@@ -374,6 +360,10 @@ namespace AerospikeTraining
 				// Another thread has this record locked. Either retry or throw an exception
 				throw new AerospikeException ("Record locked");
 			}
+
+			// TODO: We really need to obtain a lock to the record by setting total-records to -1 whilst we read it.
+			// This is similar to the code in AddEvent, and probably should be put into a common routine. Otherwise
+			// we risk the collection changing whilst we're still using it.
 
 			List<Key> keyList = new List<Key> ();
 			for (int i = 2; i <= GetSequenceNumberFromRecordNumber (count); i++) {
