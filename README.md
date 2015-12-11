@@ -1,4 +1,4 @@
-# Using a List and a Seqeuence to store an unbounded collection of records
+# Using a List and a Sequence to store an unbounded collection of records
 *Author: Tim Faulkes, Aerospike Senior Solutions Architect, Peter Milne, Aerospike Director of Applications Engineering*
 
 Scenario: You need to store a collection of events associated with a particular user and a particular day. The number of events for a given day is typically small, but can in some cases be very large. The use of a large list (LLIST) is not suitable because XDR is desired or for performance reasons.
